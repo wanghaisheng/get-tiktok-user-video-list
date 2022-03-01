@@ -39,15 +39,16 @@ def getwebdriver_chrome():
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True
     })
-    print('debug',platform.system())
     if 'Windows' in platform.system():
         print('debug')
         EDGE_DRIVER_PATH='D:/Download/audio-visual/objection_engine/assets/driver/chromedriver.exe'
-        service = ChromiumService(EDGE_DRIVER_PATH, start_error_message='error')
+        # service = ChromiumService(EDGE_DRIVER_PATH, start_error_message='error')
 
-        web_driver = webdriver.ChromiumEdge(service=service, options=chrome_options)
-        # web_driver = webdriver.Chrome(service=Service("D:\Download\audio-visual\tiktok\Douyin-DownloadAllVideo\chromedriver.exe"), options=chrome_options)
-        web_driver.maximize_window()
+        # web_driver = webdriver.ChromiumEdge(service=service, options=chrome_options)
+        web_driver = webdriver.Chrome(executable_path=EDGE_DRIVER_PATH, chrome_options=chrome_options)
+        # print('url getting',web_driver.get('baidu.com'))
+
+        # web_driver.maximize_window()
 
         print('windows system chrome driver ',web_driver)
 
@@ -74,8 +75,10 @@ def url_ok(url):
             print(f"NOT OK: HTTP response code {response.status_code}")
 
             return False   
-def scroll_to_bottom_of_page(web_driver):
-    time.sleep(5)
+def scroll_to_bottom_of_page(web_driver,pausetime):
+    if pausetime is None:
+        pausetime=5
+    time.sleep(pausetime)
 
     get_scroll_height_command = (
         "return (document.documentElement || document.body).scrollHeight;"
@@ -102,32 +105,73 @@ def scroll_to_bottom_of_page(web_driver):
 
         # Page needs to load yet again otherwise the scroll height matches the y position
         # and it breaks out of the loop
-        time.sleep(5)
+        time.sleep(pausetime)
         scroll_height = web_driver.execute_script(get_scroll_height_command)
 
-def get_video(url):
+def scroll_infi(driver):
+    SCROLL_PAUSE_TIME = 0.5
+    while True:
+
+        # Get scroll height
+        ### This is the difference. Moving this *inside* the loop
+        ### means that it checks if scrollTo is still scrolling 
+        last_height = driver.execute_script("return document.body.scrollHeight")
+
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load page
+        time.sleep(SCROLL_PAUSE_TIME)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+
+            # try again (can be removed)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+            # Wait to load page
+            time.sleep(SCROLL_PAUSE_TIME)
+
+            # Calculate new scroll height and compare with last scroll height
+            new_height = driver.execute_script("return document.body.scrollHeight")
+
+            # check if the page height has remained the same
+            if new_height == last_height:
+                # if so, you are done
+                break
+            # if not, move on to the next loop
+            else:
+                last_height = new_height
+                continue
+def get_user_video_list_tiktok(url):
+    # /html/body/div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[98]/div[1]/div/div
+    pass
+def get_user_video_list_douyin(url):
     try:
         print('====initiliaze webdriver=====')
 
         web_driver = getwebdriver_chrome()
-        print('url getting')
+        # print('url getting',web_driver.title(url),web_driver.get(url))
         out = web_driver.get(url)
-        print(out)
-        scroll_to_bottom_of_page(web_driver)
-
         wait = WebDriverWait(web_driver, 10)
         wait.until(EC.visibility_of_element_located(
-            (By.XPATH, "//*[@id='root']/div/div[2]/div/div/div[2]")))
-        while not web_driver.find_element_by_xpath("//*[@id='root']/div/div[2]/div/div/div[2]"):
-            print('page not show')
-            time.sleep(0.1)
-            finished = web_driver.find_element_by_xpath(
-                "//*[@id='root']/div/div[2]/div/div/div[2]")
-            if finished == True:
-                break
-        video_urls = [div.attrs['data-asin'] for div in driver.find_all("//*[@id='root']/div/div[2]/div/div/div[4]/div[1]/div[2]/ul/li/a')") ]
-        for video in video_urls:
-            print(video)
-
+            (By.XPATH, "/html/body/div[1]/div/div[2]/div/div/div[4]/div[1]/div[1]/div[1]/span")))
+        count=web_driver.find_elements_by_xpath("/html/body/div[1]/div/div[2]/div/div/div[4]/div[1]/div[1]/div[1]/span")[0].text
+        print('video count',)
+        # douyin 一屏只有16个视频
+        if int(count)<16:
+            pass
+        else:
+            pausetime=(int(count)/48+1)*0.5
+        # scroll_to_bottom_of_page(web_driver,pausetime)
+        scroll_infi(web_driver)
+        video_ids_list = [
+        video_element.get_attribute("href") + "\n"
+        # "//*[@class='ARNw21RN']/li"
+        for video_element in web_driver.find_elements_by_xpath(
+            "//*[@class='ECMy_Zdt']/a"
+        )]
+        print(len(video_ids_list))
     except:
         pass
