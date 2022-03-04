@@ -1,7 +1,10 @@
 # get-tiktok-user-video-list
 scrape tiktok/douyin video list from specific user or keyword
 
-以https://www.douyin.com/user/MS4wLjABAAAAUpIowEL3ygUAahQB47vy8sbYMB1eIr40qtlDwxhxFGww为例
+以**https://www.douyin.com/user/MS4wLjABAAAAUpIowEL3ygUAahQB47vy8sbYMB1eIr40qtlDwxhxFGww**为例
+
+## unofficial douyin/tiktok api
+
 
 ## selenium模拟
 
