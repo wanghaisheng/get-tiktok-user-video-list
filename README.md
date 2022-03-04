@@ -12,6 +12,8 @@ scrape tiktok/douyin video list from specific user or keyword
 *  support tiktok/douyin shared message,shorten url,normal url and batch urls
 *  support unofficial API mixed with selenium 
 *  support popular free cloud video storage platform mirror/backup
+*  support anyproxy setting
+*  provide api for specific video url parse including official limited time url and persistent unofficial storage url
 
 ## 1. unofficial douyin/tiktok api
 
@@ -19,14 +21,18 @@ scrape tiktok/douyin video list from specific user or keyword
 ## 2. selenium模拟
 
 
-## 手动过程
+## 获取某个用户所有视频的手动过程
+
 1.打开url
 https://www.douyin.com/user/MS4wLjABAAAAUpIowEL3ygUAahQB47vy8sbYMB1eIr40qtlDwxhxFGw
+
 2.不停的下拉，刷新出所有视频
+
 这里我用了自动下拉的插件
 
-3.找到视频的xpath
-//*[@id="root"]/div/div[2]/div/div/div[4]/div[1]/div[2]/ul/li/a/@href
+3.找到视频的xpath    
+
+>//*[@id="root"]/div/div[2]/div/div/div[4]/div[1]/div[2]/ul/li/a/@href
 
 4.爬取所有的视频url
 ```
@@ -44,4 +50,5 @@ Text
 .........
 .........
 ```
+5. 使用各种视频下载工具下载上面的链接
 
