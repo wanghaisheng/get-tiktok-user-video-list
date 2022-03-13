@@ -18,7 +18,10 @@ scrape tiktok/douyin video list from specific user or keyword
 ## 1. unofficial douyin/tiktok api
 
 
-## 2. selenium模拟
+## 2. playwright 模拟
+
+
+## 3. selenium模拟
 
 
 ## 获取某个用户所有视频的手动过程
