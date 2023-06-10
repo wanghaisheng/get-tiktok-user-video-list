@@ -1,7 +1,11 @@
 # get-tiktok-user-video-list
 scrape tiktok/douyin video list from specific user or keyword
 
-以**https://www.douyin.com/user/MS4wLjABAAAAUpIowEL3ygUAahQB47vy8sbYMB1eIr40qtlDwxhxFGww**为例
+take this url as example:
+
+
+**https://www.douyin.com/user/MS4wLjABAAAAUpIowEL3ygUAahQB47vy8sbYMB1eIr40qtlDwxhxFGww**
+
 
 ## feautures    
 
